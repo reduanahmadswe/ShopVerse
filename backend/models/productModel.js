@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 
 const productSchema = new mongoose.Schema({
-    name : {
+    name: {
         type: String,
         required: [true, "Please enter product name"],
         trim: true,
@@ -48,11 +48,6 @@ const productSchema = new mongoose.Schema({
     },
     reviews: [
         {
-            user: {
-                type: mongoose.Schema.ObjectId,
-                ref: "User",
-                required: true,
-            },
             name: {
                 type: String,
                 required: true,
@@ -67,4 +62,10 @@ const productSchema = new mongoose.Schema({
             },
         },
     ],
+    createdAt : {
+        type: Date,
+        default: Date.now,
+    }
 });
+
+export default mongoose.model("Product", productSchema);
