@@ -1,6 +1,9 @@
 import Product from "../models/productModel.js";
 import HandleError from "../utils/handleError.js";
 import handleAsyncError from "../middleware/handleAsyncError.js";
+import APIFunctionality from "../utils/apiFunctionality.js";
+
+//http://localhost:8000/api/v1/product/684ea26bee0d2f0c94da76c2?kyeword=Shart
 
 //Creating Product
 export const createProducts = handleAsyncError(async (req, res, next) => {
@@ -10,7 +13,7 @@ export const createProducts = handleAsyncError(async (req, res, next) => {
         if (!product) {
             return next(new HandleError("Product creation failed", 400));
         }
-        
+
         res.status(201).json({
             success: true,
             product,
@@ -22,7 +25,12 @@ export const createProducts = handleAsyncError(async (req, res, next) => {
 
 //Getting all products
 export const getAllProducts = handleAsyncError(async (req, res, next) => {
+    const apiFunctionality =  new APIFunctionality(Product.find(), req.query).search();
+
     const products = await Product.find();
+     /////////////////////////////////////
+     //          3:06:09                //
+     /////////////////////////////////////
 
     if (!products || products.length === 0) {
         return next(new HandleError("Product not found", 404));
