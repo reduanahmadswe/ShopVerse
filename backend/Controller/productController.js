@@ -5,11 +5,13 @@ import APIFunctionality from "../utils/apiFunctionality.js";
 
 //http://localhost:8000/api/v1/product/684ea26bee0d2f0c94da76c2?kyeword=Shart
 
+
 //Creating Product
 export const createProducts = handleAsyncError(async (req, res, next) => {
 
 
         const product = await Product.create(req.body);
+
         if (!product) {
             return next(new HandleError("Product creation failed", 400));
         }
@@ -25,9 +27,14 @@ export const createProducts = handleAsyncError(async (req, res, next) => {
 
 //Getting all products
 export const getAllProducts = handleAsyncError(async (req, res, next) => {
-    const apiFunctionality =  new APIFunctionality(Product.find(), req.query).search();
 
-    const products = await Product.find();
+    const resultPerPage = 3; // Number of products per page
+    const apiFunctionality =  new APIFunctionality(Product.find(), req.query)
+    .search()
+    .filter()
+    .pagination(resultPerPage);
+
+    const products = await apiFunctionality.query;
      /////////////////////////////////////
      //          3:06:09                //
      /////////////////////////////////////
