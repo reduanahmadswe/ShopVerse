@@ -5,14 +5,15 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please enter your name"],
-        maxLength:[25, "Name cannot exceed 25 characters"],
-        minLength:[3, "Name should have more than 3  characters"]
+        maxLength: [25, "Name cannot exceed 25 characters"],
+        minLength: [3, "Name should have more than 3  characters"]
     },
     email: {
         type: String,
@@ -37,7 +38,7 @@ const userSchema = new mongoose.Schema({
             required: true,
         },
     },
-    role: { 
+    role: {
         type: String,
         default: "user",
     },
@@ -45,20 +46,28 @@ const userSchema = new mongoose.Schema({
     resetPasswordExpire: Date,
 
 
-}, {timestamps: true});
+}, { timestamps: true });
 
 //password hashing
-userSchema.pre("save", async function(){
+userSchema.pre("save", async function () {
     this.password = await bcrypt.hash(this.password, 10);
 
     //1st - updating profile (name,email,image)
-   if(!this.isModified("password")){
+    if (!this.isModified("password")) {
         return next();
-   }
-    
-
+    }
 
 
 });
+
+userSchema.methods.getJWTToken = function () {
+    return jwt.sign({ id: this._id }, process.env.
+        JWT_SECRET_KEY, {
+        expiresIn: process.env.JWT_EXPIRE
+    });
+}
+
+
+
 
 export default mongoose.model("User", userSchema);
