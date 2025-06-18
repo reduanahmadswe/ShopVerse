@@ -1,9 +1,10 @@
 ///////////////////////////////////////
-///////////    3:44:43      ///////////
+///////////    04:06:43      ///////////
 ///////////////////////////////////////
 //user model
 import mongoose from "mongoose";
 import validator from "validator";
+import bcrypt from "bcryptjs";
 
 
 const userSchema = new mongoose.Schema({
@@ -45,5 +46,19 @@ const userSchema = new mongoose.Schema({
 
 
 }, {timestamps: true});
+
+//password hashing
+userSchema.pre("save", async function(){
+    this.password = await bcrypt.hash(this.password, 10);
+
+    //1st - updating profile (name,email,image)
+   if(!this.isModified("password")){
+        return next();
+   }
+    
+
+
+
+});
 
 export default mongoose.model("User", userSchema);
