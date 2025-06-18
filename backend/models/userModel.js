@@ -3,35 +3,47 @@
 ///////////////////////////////////////
 //user model
 import mongoose from "mongoose";
+import validator from "validator";
+
 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please enter your name"],
-        trim: true,
+        maxLength:[25, "Name cannot exceed 25 characters"],
+        minLength:[3, "Name should have more than 3  characters"]
     },
     email: {
         type: String,
         required: [true, "Please enter your email"],
         unique: true,
-        trim: true,
-        lowercase: true,
+        validate: [validator.isEmail, "Please enter a valid email"],
+
     },
     password: {
         type: String,
         required: [true, "Please enter your password"],
-        minlength: [6, "Password must be at least 6 characters long"],
+        minlength: [8, "Password must be at least 8 characters long"],
+        select: false,
     },
-    role: {
+    avatar: {
+        public_id: {
+            type: String,
+            required: true,
+        },
+        url: {
+            type: String,
+            required: true,
+        },
+    },
+    role: { 
         type: String,
-        enum: ["user", "admin"],
         default: "user",
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    
-});
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+
+
+}, {timestamps: true});
 
 export default mongoose.model("User", userSchema);
