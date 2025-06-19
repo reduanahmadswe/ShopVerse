@@ -49,16 +49,14 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 //password hashing
-userSchema.pre("save", async function () {
+userSchema.pre("save", async function (next) {
+    // Skip re-hashing if password is unchanged
+    if (!this.isModified("password")) return next();
+
     this.password = await bcrypt.hash(this.password, 10);
-
-    //1st - updating profile (name,email,image)
-    if (!this.isModified("password")) {
-        return next();
-    }
-
-
+    next(); // Make sure to call next()
 });
+
 
 userSchema.methods.getJWTToken = function () {
     return jwt.sign({ id: this._id }, process.env.
