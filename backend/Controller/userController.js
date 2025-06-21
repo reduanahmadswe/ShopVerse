@@ -3,6 +3,7 @@ import User from "../models/userModel.js";
 import HandleError from "../utils/handleError.js";
 import { sendToken } from "../utils/jwtToken.js";
 
+
 // Register
 export const registerUser = handleAsyncError(async (req, res) => {
     const { name, email, password } = req.body;
@@ -44,4 +45,20 @@ export const loginUser = handleAsyncError(async (req, res, next) => {
     }
 
     sendToken(user,200,res);
+});
+
+
+// logout
+export const logout = handleAsyncError(async (req, res, next) => {
+    res.cookie('token', null, {
+        httpOnly: true,
+        expires: new Date(Date.now()), // expire immediately
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict"
+    });
+
+    res.status(200).json({
+        success: true,
+        message: "Successfully Logged out"
+    });
 });
