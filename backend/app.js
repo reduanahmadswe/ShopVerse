@@ -2,15 +2,21 @@ import express from 'express';
 import product from './routes/productRoutes.js';
 // import errorHandlingMiddleware from './middleware/error.js';
 import user from './routes/userRoutes.js';
+import cookieParser  from 'cookie-parser';
+
+
+
 const app = express();
 
 
 // Middleware
 app.use(express.json()); // To parse JSON bodies
+app.use(cookieParser());
 
 //Routes
 app.use('/api/v1', product);
 app.use('/api/v1', user);
+
 
 // Error handling middleware
 
