@@ -16,15 +16,8 @@ export const registerUser = handleAsyncError(async (req, res) => {
             url: "this is a sample url",
         }
     });
-
-    const token = user.getJWTToken();
-    user.password = undefined;
-
-    res.status(201).json({
-        success: true,
-        user,
-        token,
-    });
+    
+    sendToken(user,201,res)
 });
 
 
@@ -50,13 +43,5 @@ export const loginUser = handleAsyncError(async (req, res, next) => {
         return next(new HandleError("Invalid email or password", 401));
     }
 
-    // const token = user.getJWTToken();
-    // //user.password = undefined;
-
-    // res.status(200).json({
-    //     success: true,
-    //     user,
-    //     token
-    // });
     sendToken(user,200,res);
 });
