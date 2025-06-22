@@ -26,8 +26,6 @@ export const registerUser = handleAsyncError(async (req, res) => {
 export const loginUser = handleAsyncError(async (req, res, next) => {
     const { email, password } = req.body;
 
-    console.log(email,password);
-
     if (!email || !password) {
         return next(new HandleError("Email or password cannot be empty", 400));
     }
@@ -62,3 +60,20 @@ export const logout = handleAsyncError(async (req, res, next) => {
         message: "Successfully Logged out"
     });
 });
+
+
+//reset password
+export const requestPasswordReset = handleAsyncError(async(req,res,next)=>{
+    const {email} = req.body;
+    const user = await User.findOne({email:req.body.email});
+    if(!user){
+        return next(new HandleError("User doesn't exist",400))
+    }
+    let resetToken;
+
+    try{
+
+    }catch(error){
+        
+    }
+})

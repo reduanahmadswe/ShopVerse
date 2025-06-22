@@ -10,16 +10,18 @@ import APIFunctionality from "../utils/apiFunctionality.js";
 export const createProducts = handleAsyncError(async (req, res, next) => {
 
 
-        const product = await Product.create(req.body);
+    req.body.user = req.user.id;
+    
+    const product = await Product.create(req.body);
 
-        if (!product) {
-            return next(new HandleError("Product creation failed", 400));
-        }
+    if (!product) {
+        return next(new HandleError("Product creation failed", 400));
+    }
 
-        res.status(201).json({
-            success: true,
-            product,
-        });
+    res.status(201).json({
+        success: true,
+        product,
+    });
 
 });
 
@@ -30,9 +32,9 @@ export const getAllProducts = handleAsyncError(async (req, res, next) => {
 
     const resultPerPage = 3; // Number of products per page
 
-    const apiFeatures =  new APIFunctionality(Product.find(), req.query)
-    .search()
-    .filter();
+    const apiFeatures = new APIFunctionality(Product.find(), req.query)
+        .search()
+        .filter();
 
     //Getting filtered query before pagination
     const filteredQuery = apiFeatures.query.clone();
@@ -42,7 +44,7 @@ export const getAllProducts = handleAsyncError(async (req, res, next) => {
     const totalPages = Math.ceil(productCount / resultPerPage);
     const page = Number(req.query.page) || 1;
 
-    if(page > totalPages && productCount > 0) {
+    if (page > totalPages && productCount > 0) {
         return next(new HandleError("This page does not exist", 404));
     }
 

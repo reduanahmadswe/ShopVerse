@@ -13,8 +13,8 @@ router.route('/products')
 
 
 router.route('/product/:id')
-.put(verifyUserAuth,updateProduct)
-.delete(verifyUserAuth,deleteProduct)
+.put(verifyUserAuth,roleBasedAccess('admin') ,updateProduct)
+.delete(verifyUserAuth,roleBasedAccess('admin') ,deleteProduct)
 .get(verifyUserAuth,getSingleProduct);
 
 
