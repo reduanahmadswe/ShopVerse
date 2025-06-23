@@ -110,10 +110,55 @@ export const getSingleProduct = handleAsyncError(async (req, res, next) => {
     });
 });
 
-//Creating and updatin Review 
+
+// Creating and updating Review 
 export const crateReviewforProduct = handleAsyncError(async (req, res, next) => {
-    
+    const { rating, comment, productId } = req.body;
+
+    const review = {
+        user: req.user._id, 
+        name: req.user.name,
+        rating: Number(rating),
+        comment
+    };
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+        return next(new HandleError("Product not found", 404));
+    }
+
+    const alreadyReviewed = product.reviews.find(
+        (rev) => rev.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyReviewed) {
+        // Update the existing review
+        product.reviews.forEach((rev) => {
+            if (rev.user.toString() === req.user._id.toString()) {
+                rev.rating = rating;
+                rev.comment = comment;
+            }
+        });
+    } else {
+        // Add new review
+        product.reviews.push(review);
+        product.numOfReviews = product.reviews.length;
+    }
+
+    // Recalculate average rating
+    product.ratings = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+
+    await product.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+        success: true,
+        message: alreadyReviewed ? "Review updated successfully" : "Review added successfully"
+    });
 });
+
+
+
 
 // Admin: Getting all products
 export const getAdminProducts = handleAsyncError(async (req, res, next) => {
