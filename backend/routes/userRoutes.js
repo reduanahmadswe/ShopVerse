@@ -12,7 +12,7 @@ import {
 } from "../Controller/userController.js";
 
 import { roleBasedAccess, verifyUserAuth } from './../middleware/userAuth.js';
-import { getUsersList } from "../Controller/productController.js";
+import { getSingleUser, getUsersList } from "../Controller/productController.js";
 
 
 const router = express.Router();
@@ -28,6 +28,7 @@ router.route("/profile").post(verifyUserAuth,getUserDetails);
 router.route("/password/update").post(verifyUserAuth,updatePassword);
 router.route("/profile/update").post(verifyUserAuth,updateProfile);
 router.route("/admin/users").get(verifyUserAuth,roleBasedAccess('admin'),getUsersList);
+router.route("/admin/users/:id").get(verifyUserAuth,roleBasedAccess('admin'),getSingleUser);
 
 
 export default router;

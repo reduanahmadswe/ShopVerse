@@ -131,3 +131,16 @@ export const getUsersList = handleAsyncError(async (req, res, next) => {
     });
 });
 
+//Admin - Getting Single user information
+export const getSingleUser = handleAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return next(new HandleError("User not found", 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        user
+    });
+});
