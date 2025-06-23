@@ -171,3 +171,37 @@ export const getUserDetails = handleAsyncError(async (req, res, next) => {
         user
     });
 });
+
+
+// Update password
+export const updatePassword = handleAsyncError(async (req, res, next) => {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+
+    if (!oldPassword || !newPassword || !confirmPassword) {
+        return next(new HandleError("Please provide old password, new password, and confirm password", 400));
+    }
+
+    if (newPassword !== confirmPassword) {
+        return next(new HandleError("New password and confirm password do not match", 400));
+    }
+
+    const user = await User.findById(req.user.id).select("+password");
+
+    if (!user) {
+        return next(new HandleError("User not found", 404));
+    }
+
+    const checkPasswordMatch = await user.verifyPassword(oldPassword);
+
+    if (!checkPasswordMatch) {
+        return next(new HandleError("Old password is incorrect", 401));
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Password updated successfully"
+    });
+});
