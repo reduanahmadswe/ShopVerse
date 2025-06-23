@@ -166,10 +166,7 @@ export const getUserDetails = handleAsyncError(async (req, res, next) => {
         return next(new HandleError("User not found", 404));
     }
 
-    res.status(200).json({
-        success: true,
-        user
-    });
+    sendToken(user,200,res);
 });
 
 
@@ -200,8 +197,5 @@ export const updatePassword = handleAsyncError(async (req, res, next) => {
     user.password = newPassword;
     await user.save();
 
-    res.status(200).json({
-        success: true,
-        message: "Password updated successfully"
-    });
+    sendToken(user,200,res);
 });
