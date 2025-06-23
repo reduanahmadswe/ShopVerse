@@ -11,7 +11,8 @@ import {
     updateProfile
 } from "../Controller/userController.js";
 
-import { verifyUserAuth } from './../middleware/userAuth.js';
+import { roleBasedAccess, verifyUserAuth } from './../middleware/userAuth.js';
+import { getUsersList } from "../Controller/productController.js";
 
 
 const router = express.Router();
@@ -26,6 +27,7 @@ router.route("/reset/:token").post(resetPassword);
 router.route("/profile").post(verifyUserAuth,getUserDetails);
 router.route("/password/update").post(verifyUserAuth,updatePassword);
 router.route("/profile/update").post(verifyUserAuth,updateProfile);
+router.route("/admin/users").get(verifyUserAuth,roleBasedAccess('admin'),getUsersList);
 
 
 export default router;

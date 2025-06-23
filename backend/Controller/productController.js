@@ -2,6 +2,7 @@ import Product from "../models/productModel.js";
 import HandleError from "../utils/handleError.js";
 import handleAsyncError from "../middleware/handleAsyncError.js";
 import APIFunctionality from "../utils/apiFunctionality.js";
+import User from "../models/userModel.js";
 
 //http://localhost:8000/api/v1/product/684ea26bee0d2f0c94da76c2?kyeword=Shart
 
@@ -24,7 +25,6 @@ export const createProducts = handleAsyncError(async (req, res, next) => {
     });
 
 });
-
 
 
 //Getting all products
@@ -110,4 +110,24 @@ export const getSingleProduct = handleAsyncError(async (req, res, next) => {
     });
 });
 
+
+// Admin: Getting all products
+export const getAdminProducts = handleAsyncError(async (req, res, next) => {
+    const products = await Product.find();
+
+    res.status(200).json({
+        success: true,
+        products
+    });
+});
+
+
+//Admin - getting user information
+export const getUsersList = handleAsyncError(async (req, res, next) => {
+    const users = await User.find({ _id: { $ne: req.user.id } });
+    res.status(200).json({
+        success: true,
+        users
+    });
+});
 
