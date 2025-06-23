@@ -199,3 +199,33 @@ export const updatePassword = handleAsyncError(async (req, res, next) => {
 
     sendToken(user,200,res);
 });
+
+
+// Updating user profile 
+export const updateProfile = handleAsyncError(async (req, res, next) => {
+    const { name, email } = req.body;
+
+    if (!name || !email) {
+        return next(new HandleError("Please provide both name and email", 400));
+    }
+
+    const updatedUserData = {
+        name,
+        email
+    };
+
+    const user = await User.findByIdAndUpdate(req.user.id, updatedUserData, {
+        new: true,           // return the updated user
+        runValidators: true  // validate before update
+    });
+
+    if (!user) {
+        return next(new HandleError("User not found", 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        message: "Profile updated successfully",
+        user
+    });
+});
