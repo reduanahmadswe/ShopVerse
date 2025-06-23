@@ -3,6 +3,7 @@ import {
     crateReviewforProduct,
     createProducts,
     deleteProduct,
+    deleteProductReview,
     getAdminProducts,
     getAllProducts,
     getProductReviews,
@@ -30,6 +31,7 @@ router.route('/admin/product/:id')
 router.route('/product/:id').get(getSingleProduct);
 router.route('/review').put(verifyUserAuth,crateReviewforProduct);
 router.route('/reviews').get(getProductReviews);
+router.route("/reviews").delete(verifyUserAuth, deleteProductReview);
 
 
 
