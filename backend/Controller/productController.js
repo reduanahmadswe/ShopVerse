@@ -110,6 +110,10 @@ export const getSingleProduct = handleAsyncError(async (req, res, next) => {
     });
 });
 
+//Creating and updatin Review 
+export const crateReviewforProduct = handleAsyncError(async (req, res, next) => {
+    
+});
 
 // Admin: Getting all products
 export const getAdminProducts = handleAsyncError(async (req, res, next) => {
@@ -149,11 +153,9 @@ export const getSingleUser = handleAsyncError(async (req, res, next) => {
 //Admin: Update User Role
 
 export const updateUserRole = handleAsyncError(async (req, res, next) => {
-    const { name, email, role } = req.body;
+    const { role } = req.body;
 
     const user = await User.findByIdAndUpdate(req.params.id, {
-        name,
-        email,
         role
     }, {
         new: true,
