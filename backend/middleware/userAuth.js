@@ -6,14 +6,14 @@ import User from '../models/userModel.js';
 
 export const verifyUserAuth = handleAsyncError(async (req, res, next) => {
     const { token } = req.cookies;
-    console.log(token);
+    //console.log(token);
 
     if (!token) {
         return next(new HandleError("Authentication is missing! Please login to acces resource", 401))
     }
 
     const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    console.log(decodedData);
+    //console.log(decodedData);
     req.user = await User.findById(decodedData.id);
     next();
 

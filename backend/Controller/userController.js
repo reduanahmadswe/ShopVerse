@@ -150,9 +150,24 @@ export const resetPassword = handleAsyncError(async (req, res, next) => {
     await user.save();
 
     sendToken(user, 200, res);
-    ///////////////////////////////////////
+///////////////////////////////////////
 ///////////    06:38:43      ///////////
 ///////////////////////////////////////
 
 
 })
+
+
+// Get User details 
+export const getUserDetails = handleAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+        return next(new HandleError("User not found", 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        user
+    });
+});
