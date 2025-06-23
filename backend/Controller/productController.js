@@ -138,9 +138,58 @@ export const getSingleUser = handleAsyncError(async (req, res, next) => {
     if (!user) {
         return next(new HandleError("User not found", 404));
     }
-
+   
     res.status(200).json({
         success: true,
         user
     });
 });
+
+
+//Admin: Update User Role
+
+export const updateUserRole = handleAsyncError(async (req, res, next) => {
+    const { name, email, role } = req.body;
+
+    const user = await User.findByIdAndUpdate(req.params.id, {
+        name,
+        email,
+        role
+    }, {
+        new: true,
+        runValidators: true
+    });
+
+    if (!user) {
+        return next(new HandleError("User not found", 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        message: "User role updated successfully",
+        user
+    });
+});
+
+
+// Admin: Delete User (excluding other admins)
+export const deleteUser = handleAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return next(new HandleError("User not found", 404));
+    }
+
+    // Prevent deleting another admin
+    if (user.role === 'admin') {
+        return next(new HandleError("You cannot delete another admin", 403));
+    }
+
+    await user.deleteOne(); 
+
+    res.status(200).json({
+        success: true,
+        message: "User deleted successfully"
+    });
+});
+
