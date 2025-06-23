@@ -5,6 +5,7 @@ import {
     deleteProduct,
     getAdminProducts,
     getAllProducts,
+    getProductReviews,
     getSingleProduct,
     updateProduct
 } from '../Controller/productController.js';
@@ -28,6 +29,7 @@ router.route('/admin/product/:id')
 
 router.route('/product/:id').get(getSingleProduct);
 router.route('/review').put(verifyUserAuth,crateReviewforProduct);
+router.route('/reviews').get(getProductReviews);
 
 
 

@@ -157,6 +157,19 @@ export const crateReviewforProduct = handleAsyncError(async (req, res, next) => 
     });
 });
 
+// Getting Reviews
+export const getProductReviews = handleAsyncError(async (req, res, next) => {
+    const product = await Product.findById(req.query.id);
+
+    if (!product) {
+        return next(new HandleError("Product not found", 400));
+    }
+
+    res.status(200).json({
+        success: true,
+        reviews: product.reviews
+    });
+});
 
 
 
