@@ -66,6 +66,8 @@ export const getAllProducts = handleAsyncError(async (req, res, next) => {
     });
 });
 
+
+
 //Update product
 export const updateProduct = handleAsyncError(async (req, res, next) => {
     const products = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -202,6 +204,10 @@ export const deleteProductReview = handleAsyncError(async (req, res, next) => {
         message: "Review deleted successfully"
     });
 });
+
+///////////////////////////////////////
+///////////    08:11:43      //////////
+///////////////////////////////////////
 
 
 // Admin: Getting all products
